@@ -1,114 +1,70 @@
--- Main Script for Anime Rarities
-local Key = "PumpkinPie"
+local OrionLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"))()
+local Window = OrionLib:MakeWindow({Name = "Anime Rarities Hub", HidePremium = false, SaveConfig = true, ConfigFolder = "AnimeRarities"})
 
-local GameID = {
-	--Bee Swarm Simulator
-	1537690962,
-	--Anime Rarities
-	16778527574
-}
+local Tab = Window:MakeTab({
+    Name = "Main",
+    Icon = "rbxassetid://4483345998",
+    PremiumOnly = false
+})
 
-local ID = {
-	-- DumbHubOwner 
-	4041931572,
-	-- My Main  
-	2958606564,
-	3438346182,
-	-- Buyers, Boosters, Youtubers...
-}
-
--- GUI Elements
-local FatalityKeyyLibrary = Instance.new("ScreenGui")
-local Main = Instance.new("Frame")
--- (Omitted code setting up the UI elements for brevity)
-
--- Premium Access Verification
-PremiumKey.MouseButton1Click:Connect(
-	function()
-		for i, v in pairs(ID) do
-			if game.Players.LocalPlayer.UserId == v then
-				CheckingKeyText.Visible = true
-				CheckingKeyText.Text = "> Checking Access.. 1/3"
-				wait(1)
-				CheckingKeyText.Text = "> Checking Access.. 2/3"
-				wait(1)
-				CheckingKeyText.Text = "> Checking Access.. 3/3"
-				wait(1)
-				CheckingKeyText.Text = "> Access Granted"
-				wait(1)
-				if CheckingKeyText.Text == "> Access Granted" then
-					CheckingGameText.Visible = true
-					CheckingGameText.Text = " > Checking For Script.. 1/3"
-					wait(1)
-					CheckingGameText.Text = " > Checking For Script.. 2/3"
-					wait(1)
-					CheckingGameText.Text = " > Checking For Script.. 3/3"
-					wait(1)
-					for i, v in pairs(GameID) do  
-						if game.PlaceId == v then
-							CheckingGameText.Text = " > Script Found"
-							wait(1)
-							DoneText.Visible = true
-							wait(1)
-							FatalityKeyyLibrary:Destroy()
-							loadstring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"))()
-						else
-							CheckingGameText.Text = " > Script Not Found"
-						end
-					end
-				end
-			else
-				CheckingKeyText.Visible = true
-				CheckingKeyText.Text = "> Invalid Access"
-				wait(3)
-				CheckingKeyText.Text = ""
-			end
-		end
-	end
-)
-
--- Functionality for Speed Attack, Damage, Luck, Aura Kill
-local function activateSpeedBoost()
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 32
-end
-
-local function activateDamageBoost()
-    game.Players.LocalPlayer.Character:FindFirstChildOfClass("Tool").Handle.Damage.Value = 50
-end
-
-local function increaseLuck()
-    game.Players.LocalPlayer.Luck.Value = game.Players.LocalPlayer.Luck.Value + 10
-end
-
-local function auraKill()
-    for _, enemy in pairs(workspace.Enemies:GetChildren()) do
-        if (enemy.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude < 20 then
-            enemy:Destroy()
+Tab:AddButton({
+    Name = "Fast Attack",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            -- Assume there's a method to set attack speed in the game's code
+            humanoid.WalkSpeed = 100 -- Adjust speed as needed
         end
     end
-end
+})
 
--- GUI Buttons for activating the functions
-local SpeedButton = Instance.new("TextButton", Container)
-SpeedButton.Text = "Speed Boost"
-SpeedButton.Position = UDim2.new(0.2, 0, 0.6, 0)
-SpeedButton.Size = UDim2.new(0, 100, 0, 50)
-SpeedButton.MouseButton1Click:Connect(activateSpeedBoost)
+Tab:AddButton({
+    Name = "Increase Damage",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        -- Modify the code to adjust damage
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoid = character:FindFirstChildOfClass("Humanoid")
+        if humanoid then
+            -- Example: Increase damage by changing a property or calling a method
+            -- Replace with actual method or property to increase damage
+            humanoid.Health = humanoid.Health + 1000 -- Example adjustment
+        end
+    end
+})
 
-local DamageButton = Instance.new("TextButton", Container)
-DamageButton.Text = "Damage Boost"
-DamageButton.Position = UDim2.new(0.4, 0, 0.6, 0)
-DamageButton.Size = UDim2.new(0, 100, 0, 50)
-DamageButton.MouseButton1Click:Connect(activateDamageBoost)
+Tab:AddButton({
+    Name = "Increase Luck",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        -- Modify the code to adjust luck
+        local character = player.Character or player.CharacterAdded:Wait()
+        if character then
+            -- Example: Increase luck by modifying a player property or calling a method
+            -- Replace with actual method or property to increase luck
+            local stats = player:FindFirstChild("Stats")
+            if stats then
+                stats.Luck.Value = stats.Luck.Value + 10 -- Example adjustment
+            end
+        end
+    end
+})
 
-local LuckButton = Instance.new("TextButton", Container)
-LuckButton.Text = "Increase Luck"
-LuckButton.Position = UDim2.new(0.6, 0, 0.6, 0)
-LuckButton.Size = UDim2.new(0, 100, 0, 50)
-LuckButton.MouseButton1Click:Connect(increaseLuck)
+Tab:AddButton({
+    Name = "Aura Kill",
+    Callback = function()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local position = character.HumanoidRootPart.Position
+        for _, monster in ipairs(workspace.Monsters:GetChildren()) do
+            if (monster.PrimaryPart.Position - position).magnitude < 10 then -- Adjust radius as needed
+                -- Example: Destroy or defeat monsters within range
+                monster:Destroy() -- Example action
+            end
+        end
+    end
+})
 
-local AuraKillButton = Instance.new("TextButton", Container)
-AuraKillButton.Text = "Aura Kill"
-AuraKillButton.Position = UDim2.new(0.8, 0, 0.6, 0)
-AuraKillButton.Size = UDim2.new(0, 100, 0, 50)
-AuraKillButton.MouseButton1Click:Connect(auraKill)
+OrionLib:Init()
