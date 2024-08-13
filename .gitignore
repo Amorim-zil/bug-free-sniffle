@@ -1,5 +1,5 @@
 -- Carregar a biblioteca
-local libraryCode = loadistring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/KillAuraLibrary.lua")
+local libraryCode = loadistring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore")
 local KillAuraLibrary = loadstring(libraryCode)()
 
 -- Script principal
