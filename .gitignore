@@ -1,69 +1,68 @@
--- Carregar a biblioteca
-local libraryCode = loadistring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore")
-local KillAuraLibrary = loadstring(libraryCode)()
+-- Load the external library
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"))()
 
--- Script principal
+-- Variables
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local attackRadius = 50  -- Radius to detect monsters
+local monsters = {}  -- Table to store detected monsters
 
-local attackRadius = 50
-local isKillAuraEnabled = false
+-- Function to kill nearby monsters using different approaches
+local function killNearbyMonsters()
+    -- Approach 1: Directly setting Health to 0
+    for _, obj in ipairs(Workspace:FindPartsInRegion3(Region3.new(
+        humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
+        humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
+    ), nil, math.huge)) do
+        if obj:IsA("Model") and obj:FindFirstChild("Humanoid") then
+            obj.Humanoid.Health = 0
+        end
+    end
 
--- Criação da UI
+    -- Approach 2: Using a different region size
+    local region = Region3.new(
+        humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
+        humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
+    )
+    for _, part in ipairs(Workspace:FindPartsInRegion3(region, nil, math.huge)) do
+        local model = part:FindFirstAncestorOfClass("Model")
+        if model and model:FindFirstChild("Humanoid") then
+            model.Humanoid.Health = 0
+        end
+    end
+
+    -- Approach 3: Iterating over all monsters in a specific folder
+    local monsterFolder = Workspace:FindFirstChild("Monsters")
+    if monsterFolder then
+        for _, monster in ipairs(monsterFolder:GetChildren()) do
+            if monster:IsA("Model") and monster:FindFirstChild("Humanoid") then
+                local distance = (humanoidRootPart.Position - monster.PrimaryPart.Position).magnitude
+                if distance <= attackRadius then
+                    monster.Humanoid.Health = 0
+                end
+            end
+        end
+    end
+end
+
+-- Create UI
 local function createUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "KillAuraUI"
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
-    local toggleButton = Instance.new("TextButton")
-    toggleButton.Size = UDim2.new(0, 150, 0, 50)
-    toggleButton.Position = UDim2.new(0, 10, 0, 10)
-    toggleButton.Text = "Enable Kill Aura"
-    toggleButton.Parent = screenGui
+    local button = Instance.new("TextButton")
+    button.Size = UDim2.new(0, 200, 0, 50)
+    button.Position = UDim2.new(0.5, -100, 0.5, -25)
+    button.Text = "Kill Monsters"
+    button.Parent = screenGui
 
-    toggleButton.MouseButton1Click:Connect(function()
-        isKillAuraEnabled = not isKillAuraEnabled
-        toggleButton.Text = isKillAuraEnabled and "Kill Aura: ON" or "Enable Kill Aura"
+    button.MouseButton1Click:Connect(function()
+        killNearbyMonsters()
     end)
 end
 
--- Função para lidar com monstros
-local function handleMonsters()
-    local character = player.Character or player.CharacterAdded:Wait()
-    local humanoidRootPart = character:FindFirstChildOfClass("HumanoidRootPart")
-
-    if not humanoidRootPart then return end
-
-    local monsters = Workspace:FindPartsInRegion3(
-        Region3.new(
-            humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
-            humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
-        ),
-        nil,
-        math.huge
-    )
-
-    for _, part in pairs(monsters) do
-        local monster = part.Parent
-        if monster and monster:IsA("Model") and monster ~= character and monster:FindFirstChildOfClass("Humanoid") then
-            monster.Humanoid.Health = 0
-        end
-    end
-end
-
--- Atualização contínua
-local function update()
-    while true do
-        if isKillAuraEnabled then
-            handleMonsters()
-        end
-        wait(1)  -- Atualiza a cada 1 segundo
-    end
-end
-
--- Inicialização
 createUI()
-update()
-
-
