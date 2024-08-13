@@ -51,7 +51,7 @@ PremiumKey.MouseButton1Click:Connect(
 							DoneText.Visible = true
 							wait(1)
 							FatalityKeyyLibrary:Destroy()
-							loadstring(game:HttpGet("https://raw.githubusercontent.com/WHYSTRIV3/DumbHub/main/UILoadStrings.lua"))()
+							loadstring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"))()
 						else
 							CheckingGameText.Text = " > Script Not Found"
 						end
