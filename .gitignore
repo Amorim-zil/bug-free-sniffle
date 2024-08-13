@@ -1,29 +1,167 @@
+-- Adiciona a biblioteca externa
 local libraryURL = "https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"
 local libraryCode = loadstring(game:HttpGet(libraryURL))()
-local library = libraryCode or {} -- Se a biblioteca falhar, usar uma tabela vazia
+local library = libraryCode or {}
 
-local function createUI()
-    local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "MyScreenGui"
-    screenGui.Parent = game.Players.LocalPlayer.PlayerGui
-    
-    local button = Instance.new("TextButton")
-    button.Size = UDim2.new(0, 200, 0, 50)
-    button.Position = UDim2.new(0.5, -100, 0.5, -25)
-    button.Text = "Kill Aura"
-    button.Parent = screenGui
-    
-    button.MouseButton1Click:Connect(function()
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-        
-        if humanoidRootPart then
-            for _, obj in ipairs(workspace:FindPartsInRegion3(workspace.CurrentCamera:WorldToViewportPoint(humanoidRootPart.Position) - Vector3.new(50, 50, 50), workspace.CurrentCamera:WorldToViewportPoint(humanoidRootPart.Position) + Vector3.new(50, 50, 50), nil)) do
-                if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") and obj ~= character then
-                    obj:FindFirstChildOfClass("Humanoid"):TakeDamage(obj:FindFirstChildOfClass("Humanoid").Health)
-                end
-            end
-        end
-    end)
-end
+-- Criação da UI
+local FatalityKeyyLibrary = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Container = Instance.new("Frame")
+local ContainerUICorner = Instance.new("UICorner")
+local PlayerImage = Instance.new("ImageLabel")
+local UICorner = Instance.new("UICorner")
+local PlayerID = Instance.new("TextLabel")
+local ConsoleFrame = Instance.new("Frame")
+local ConsoleUICorner = Instance.new("UICorner")
+local ConsoleDivider = Instance.new("Frame")
+local ConsoleTitle = Instance.new("TextLabel")
+local CheckingKeyText = Instance.new("TextLabel")
+local CheckingGameText = Instance.new("TextLabel")
+local DoneText = Instance.new("TextLabel")
+local TextBox = Instance.new("TextBox")
+local TextBoxUICorner = Instance.new("UICorner")
+local CancelButton = Instance.new("TextButton")
+local CancelButtonUICorner = Instance.new("UICorner")
+local ConfirmButton = Instance.new("TextButton")
+local ConfirmButtonUICorner = Instance.new("UICorner")
+local PremiumKey = Instance.new("TextButton")
+local PremiumUICorner = Instance.new("UICorner")
+local Access = Instance.new("TextLabel")
+local GetKey = Instance.new("TextButton")
+local GetKeyUICorner = Instance.new("UICorner")
+local HideTextButton = Instance.new("TextButton")
+local HideTextUICorner = Instance.new("UICorner")
+local Access_2 = Instance.new("TextLabel")
+local MainUICorner = Instance.new("UICorner")
+local MainTitle = Instance.new("TextLabel")
+local MainTopDivider = Instance.new("Frame")
+
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+
+-- Propriedades da UI
+FatalityKeyyLibrary.Name = "FatalityKeyyLibrary"
+FatalityKeyyLibrary.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+FatalityKeyyLibrary.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Main.Name = "Main"
+Main.Parent = FatalityKeyyLibrary
+Main.AnchorPoint = Vector2.new(0.5, 0.5)
+Main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+Main.BackgroundTransparency = 0.300
+Main.BorderColor3 = Color3.fromRGB(255, 255, 255)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.550051212, 0, 0.447744071, 0)
+Main.Size = UDim2.new(0, 541, 0, 353)
+
+Container.Name = "Container"
+Container.Parent = Main
+Container.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+Container.BackgroundTransparency = 0.700
+Container.BorderColor3 = Color3.fromRGB(11, 11, 11)
+Container.BorderSizePixel = 0
+Container.Position = UDim2.new(0.0131891221, 0, 0.217273578, 0)
+Container.Selectable = true
+Container.Size = UDim2.new(0, 527, 0, 270)
+
+ContainerUICorner.Name = "ContainerUICorner"
+ContainerUICorner.Parent = Container
+
+PlayerImage.Name = "PlayerImage"
+PlayerImage.Parent = Container
+PlayerImage.BackgroundColor3 = Color3.fromRGB(76, 76, 76)
+PlayerImage.BackgroundTransparency = 0.800
+PlayerImage.BorderColor3 = Color3.fromRGB(27, 42, 53)
+PlayerImage.BorderSizePixel = 0
+PlayerImage.Position = UDim2.new(0.00893696025, 0, 0.032203164, 0)
+PlayerImage.Size = UDim2.new(0, 95, 0, 92)
+
+UICorner.CornerRadius = UDim.new(2, 0)
+UICorner.Parent = PlayerImage
+
+PlayerID.Name = "PlayerID"
+PlayerID.Parent = Container
+PlayerID.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+PlayerID.BackgroundTransparency = 1.000
+PlayerID.BorderColor3 = Color3.fromRGB(27, 42, 53)
+PlayerID.Position = UDim2.new(0.0106839221, 0, 0.633283675, 0)
+PlayerID.Size = UDim2.new(0, 185, 0, 27)
+PlayerID.Font = Enum.Font.Gotham
+PlayerID.Text = "Player ID: 41414124124"
+PlayerID.TextColor3 = Color3.fromRGB(255, 255, 255)
+PlayerID.TextSize = 20.000
+PlayerID.TextXAlignment = Enum.TextXAlignment.Left
+
+ConsoleFrame.Name = "ConsoleFrame"
+ConsoleFrame.Parent = Container
+ConsoleFrame.BackgroundColor3 = Color3.fromRGB(43, 43, 43)
+ConsoleFrame.BackgroundTransparency = 0.800
+ConsoleFrame.BorderColor3 = Color3.fromRGB(27, 42, 53)
+ConsoleFrame.BorderSizePixel = 0
+ConsoleFrame.Position = UDim2.new(0.566756725, 0, -0.00360638648, 0)
+ConsoleFrame.Size = UDim2.new(0, 220, 0, 124)
+
+ConsoleUICorner.Name = "ConsoleUICorner"
+ConsoleUICorner.Parent = ConsoleFrame
+
+ConsoleDivider.Name = "ConsoleDivider"
+ConsoleDivider.Parent = ConsoleFrame
+ConsoleDivider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ConsoleDivider.BorderColor3 = Color3.fromRGB(255, 255, 255)
+ConsoleDivider.BorderSizePixel = 0
+ConsoleDivider.Position = UDim2.new(0, 0, 0.250664502, 0)
+ConsoleDivider.Size = UDim2.new(0, 219, 0, 2)
+
+ConsoleTitle.Name = "ConsoleTitle"
+ConsoleTitle.Parent = ConsoleFrame
+ConsoleTitle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ConsoleTitle.BackgroundTransparency = 1.000
+ConsoleTitle.BorderColor3 = Color3.fromRGB(27, 42, 53)
+ConsoleTitle.Position = UDim2.new(0.114694074, 0, -0.0348525494, 0)
+ConsoleTitle.Size = UDim2.new(0, 181, 0, 37)
+ConsoleTitle.Font = Enum.Font.Gotham
+ConsoleTitle.Text = "Console"
+ConsoleTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConsoleTitle.TextSize = 23.000
+ConsoleTitle.TextWrapped = true
+
+CheckingKeyText.Name = "CheckingKeyText"
+CheckingKeyText.Parent = ConsoleFrame
+CheckingKeyText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CheckingKeyText.BackgroundTransparency = 1.000
+CheckingKeyText.BorderColor3 = Color3.fromRGB(27, 42, 53)
+CheckingKeyText.Position = UDim2.new(0.020935744, 0, 0.297359198, 0)
+CheckingKeyText.Size = UDim2.new(0, 259, 0, 37)
+CheckingKeyText.Font = Enum.Font.Gotham
+CheckingKeyText.Text = "> Checking Key.. 1/3"
+CheckingKeyText.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckingKeyText.TextSize = 17.000
+CheckingKeyText.TextWrapped = true
+CheckingKeyText.TextXAlignment = Enum.TextXAlignment.Left
+CheckingKeyText.Visible = false
+
+CheckingGameText.Name = "CheckingGameText"
+CheckingGameText.Parent = ConsoleFrame
+CheckingGameText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+CheckingGameText.BackgroundTransparency = 1.000
+CheckingGameText.BorderColor3 = Color3.fromRGB(27, 42, 53)
+CheckingGameText.Position = UDim2.new(0, 0, 0.522968829, 0)
+CheckingGameText.Size = UDim2.new(0, 265, 0, 37)
+CheckingGameText.Font = Enum.Font.Gotham
+CheckingGameText.Text = " > Checking Game.. 1/3"
+CheckingGameText.TextColor3 = Color3.fromRGB(255, 255, 255)
+CheckingGameText.TextSize = 17.000
+CheckingGameText.TextWrapped = true
+CheckingGameText.TextXAlignment = Enum.TextXAlignment.Left
+CheckingGameText.Visible = false
+
+DoneText.Name = "DoneText"
+DoneText.Parent = ConsoleFrame
+DoneText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+DoneText.BackgroundTransparency = 1.000
+DoneText.BorderColor3 = Color3.fromRGB(27, 42, 53)
+DoneText.Position = UDim2.new(0.020935744, 0, 0.748578787, 0)
+DoneText.Size = UDim2.new(0, 259, 0, 37)
+DoneText.Font = Enum.Font.Gotham
+DoneText.Text = "> Done!"
+DoneText.TextColor3 = Color3.fromRGB(255, 255, 255)
+Done
