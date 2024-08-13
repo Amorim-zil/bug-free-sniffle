@@ -1,41 +1,140 @@
-# Compiled Lua sources
-luac.out
+local Key = "PumpkinPie"
 
-# luarocks build files
-*.src.rock
-*.zip
-*.tar.gz
+local GameID = {
+    --Bee Swarm Simualtor
+    1537690962,
+    --Anime Rarities
+    16778527574
+}
 
-# Object files
-*.o
-*.os
-*.ko
-*.obj
-*.elf
+local ID = {
+    -- DumbHubOwner 
+    4041931572,
+    -- My Main  
+    2958606564,
+    -- [Add more IDs here]
+}
 
-# Precompiled Headers
-*.gch
-*.pch
+-- Usando a biblioteca Rayfield para a interface
+local Rayfield = loadstring(game:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
 
-# Libraries
-*.lib
-*.a
-*.la
-*.lo
-*.def
-*.exp
+local Window = Rayfield:CreateWindow({
+    Name = "Dumb Hub",
+    LoadingTitle = "Carregando Dumb Hub",
+    LoadingSubtitle = "by Dev",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil, -- Use uma pasta personalizada
+        FileName = "DumbHub"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "", -- Adicione o link do servidor aqui, se aplicável
+        RememberJoins = true
+    },
+    KeySystem = true, -- Sistema de chave para acesso
+    Key = Key,
+    KeySettings = {
+        Title = "Dumb Hub",
+        Subtitle = "Acesso restrito",
+        Note = "Entre com sua chave",
+        FileName = "DumbHubKey",
+        SaveKey = true,
+        GrabKeyFromSite = false, -- Se falso, você precisará definir a chave manualmente
+        Actions = {
+            [1] = {
+                Text = "Discord Server",
+                OnClick = function()
+                    print("Link para o Discord")
+                end
+            }
+        },
+        Key = Key
+    }
+})
 
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
+local Tab = Window:CreateTab("Principal", 4483362458) -- Cria uma aba na interface
 
-# Executables
-*.exe
-*.out
-*.app
-*.i*86
-*.x86_64
-*.hex
+-- Função para verificar o jogo atual
+local function CheckGame()
+    if table.find(GameID, game.PlaceId) then
+        Rayfield:Notify({
+            Title = "Jogo Detectado",
+            Content = "O jogo foi detectado com sucesso!",
+            Duration = 5,
+            Image = 4483362458,
+            Actions = {
+                Ignore = {
+                    Name = "Entendido",
+                    Callback = function()
+                        print("Jogo confirmado.")
+                    end
+                }
+            }
+        })
+    else
+        Rayfield:Notify({
+            Title = "Jogo Não Detectado",
+            Content = "Este jogo não é compatível.",
+            Duration = 5,
+            Image = 4483362458,
+            Actions = {
+                Ignore = {
+                    Name = "Sair",
+                    Callback = function()
+                        game:Shutdown()
+                    end
+                }
+            }
+        })
+    end
+end
 
+-- Função para definir a sorte no jogo Anime Rarities
+local function SetLuck()
+    if game.PlaceId == 16778527574 then
+        local player = game.Players.LocalPlayer
+        if player then
+            -- Supondo que "luck" seja uma variável ou método no jogo
+            local luckValue = 100 -- Define a sorte para 100x
+            -- Substitua isso pela maneira real de modificar a sorte em Anime Rarities
+            player.Luck = luckValue
+            Rayfield:Notify({
+                Title = "Sorte Definida",
+                Content = "Sorte foi ajustada para 100x!",
+                Duration = 5,
+                Image = 4483362458,
+                Actions = {
+                    Ignore = {
+                        Name = "Entendido",
+                        Callback = function()
+                            print("Sorte ajustada.")
+                        end
+                    }
+                }
+            })
+        end
+    end
+end
+
+-- Adiciona botões na interface
+Tab:CreateButton({
+    Name = "Verificar Jogo",
+    Callback = function()
+        CheckGame()
+    end
+})
+
+Tab:CreateButton({
+    Name = "Definir Sorte 100x",
+    Callback = function()
+        SetLuck()
+    end
+})
+
+Tab:CreateButton({
+    Name = "Cancelar",
+    Callback = function()
+        game:Shutdown()
+    end
+})
