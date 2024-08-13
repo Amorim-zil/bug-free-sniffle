@@ -2,53 +2,34 @@
 local libraryCode = loadistring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/KillAuraLibrary.lua")
 local KillAuraLibrary = loadstring(libraryCode)()
 
--- Inicializar a biblioteca
-KillAuraLibrary:init()
-
-
--- KillAuraLibrary.lua
-local KillAuraLibrary = {}
-
--- Configurações iniciais
+-- Script principal
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
-local UIS = game:GetService("UserInputService")
-local GuiService = game:GetService("GuiService")
 local player = Players.LocalPlayer
 
 local attackRadius = 50
 local isKillAuraEnabled = false
 
--- Função para criar a UI
+-- Criação da UI
 local function createUI()
     local screenGui = Instance.new("ScreenGui")
     screenGui.Name = "KillAuraUI"
     screenGui.Parent = player:WaitForChild("PlayerGui")
 
     local toggleButton = Instance.new("TextButton")
-    toggleButton.Size = UDim2.new(0, 100, 0, 50)
+    toggleButton.Size = UDim2.new(0, 150, 0, 50)
     toggleButton.Position = UDim2.new(0, 10, 0, 10)
-    toggleButton.Text = "Toggle Kill Aura"
+    toggleButton.Text = "Enable Kill Aura"
     toggleButton.Parent = screenGui
 
     toggleButton.MouseButton1Click:Connect(function()
         isKillAuraEnabled = not isKillAuraEnabled
-        toggleButton.Text = isKillAuraEnabled and "Kill Aura: ON" or "Kill Aura: OFF"
+        toggleButton.Text = isKillAuraEnabled and "Kill Aura: ON" or "Enable Kill Aura"
     end)
 end
 
 -- Função para lidar com monstros
-local function handleMonster(monster)
-    if monster:FindFirstChildOfClass("Humanoid") then
-        local humanoid = monster:FindFirstChildOfClass("Humanoid")
-        humanoid.Health = 0
-    end
-end
-
--- Função principal do Kill Aura
-local function killAura()
-    if not isKillAuraEnabled then return end
-
+local function handleMonsters()
     local character = player.Character or player.CharacterAdded:Wait()
     local humanoidRootPart = character:FindFirstChildOfClass("HumanoidRootPart")
 
@@ -65,19 +46,24 @@ local function killAura()
 
     for _, part in pairs(monsters) do
         local monster = part.Parent
-        if monster and monster:IsA("Model") and monster ~= character then
-            handleMonster(monster)
+        if monster and monster:IsA("Model") and monster ~= character and monster:FindFirstChildOfClass("Humanoid") then
+            monster.Humanoid.Health = 0
         end
     end
 end
 
--- Inicialização
-function KillAuraLibrary:init()
-    createUI()
+-- Atualização contínua
+local function update()
     while true do
-        killAura()
-        wait(1)
+        if isKillAuraEnabled then
+            handleMonsters()
+        end
+        wait(1)  -- Atualiza a cada 1 segundo
     end
 end
 
-return KillAuraLibrary
+-- Inicialização
+createUI()
+update()
+
+
