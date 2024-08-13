@@ -1,44 +1,29 @@
--- Load the external library
-loadstring(game:HttpGet("https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"))()
+local libraryURL = "https://raw.githubusercontent.com/Amorim-zil/bug-free-sniffle/main/.gitignore"
+local libraryCode = loadstring(game:HttpGet(libraryURL))()
+local library = libraryCode or {} -- Se a biblioteca falhar, usar uma tabela vazia
 
--- Variables
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local attackRadius = 50
-
--- Function to kill nearby monsters
-local function killNearbyMonsters()
-    local region = Region3.new(
-        humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
-        humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
-    )
-
-    for _, part in ipairs(Workspace:FindPartsInRegion3(region, nil, math.huge)) do
-        local model = part:FindFirstAncestorOfClass("Model")
-        if model and model:FindFirstChild("Humanoid") then
-            model.Humanoid.Health = 0
-        end
-    end
-end
-
--- Create UI
 local function createUI()
     local screenGui = Instance.new("ScreenGui")
-    screenGui.Name = "KillAuraUI"
-    screenGui.Parent = player:WaitForChild("PlayerGui")
-
+    screenGui.Name = "MyScreenGui"
+    screenGui.Parent = game.Players.LocalPlayer.PlayerGui
+    
     local button = Instance.new("TextButton")
     button.Size = UDim2.new(0, 200, 0, 50)
     button.Position = UDim2.new(0.5, -100, 0.5, -25)
-    button.Text = "Kill Monsters"
+    button.Text = "Kill Aura"
     button.Parent = screenGui
-
+    
     button.MouseButton1Click:Connect(function()
-        killNearbyMonsters()
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+        
+        if humanoidRootPart then
+            for _, obj in ipairs(workspace:FindPartsInRegion3(workspace.CurrentCamera:WorldToViewportPoint(humanoidRootPart.Position) - Vector3.new(50, 50, 50), workspace.CurrentCamera:WorldToViewportPoint(humanoidRootPart.Position) + Vector3.new(50, 50, 50), nil)) do
+                if obj:IsA("Model") and obj:FindFirstChildOfClass("Humanoid") and obj ~= character then
+                    obj:FindFirstChildOfClass("Humanoid"):TakeDamage(obj:FindFirstChildOfClass("Humanoid").Health)
+                end
+            end
+        end
     end)
 end
-
-createUI()
