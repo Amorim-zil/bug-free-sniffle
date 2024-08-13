@@ -7,43 +7,19 @@ local Workspace = game:GetService("Workspace")
 local player = Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
 local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-local attackRadius = 50  -- Radius to detect monsters
-local monsters = {}  -- Table to store detected monsters
+local attackRadius = 50
 
--- Function to kill nearby monsters using different approaches
+-- Function to kill nearby monsters
 local function killNearbyMonsters()
-    -- Approach 1: Directly setting Health to 0
-    for _, obj in ipairs(Workspace:FindPartsInRegion3(Region3.new(
-        humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
-        humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
-    ), nil, math.huge)) do
-        if obj:IsA("Model") and obj:FindFirstChild("Humanoid") then
-            obj.Humanoid.Health = 0
-        end
-    end
-
-    -- Approach 2: Using a different region size
     local region = Region3.new(
         humanoidRootPart.Position - Vector3.new(attackRadius, attackRadius, attackRadius),
         humanoidRootPart.Position + Vector3.new(attackRadius, attackRadius, attackRadius)
     )
+
     for _, part in ipairs(Workspace:FindPartsInRegion3(region, nil, math.huge)) do
         local model = part:FindFirstAncestorOfClass("Model")
         if model and model:FindFirstChild("Humanoid") then
             model.Humanoid.Health = 0
-        end
-    end
-
-    -- Approach 3: Iterating over all monsters in a specific folder
-    local monsterFolder = Workspace:FindFirstChild("Monsters")
-    if monsterFolder then
-        for _, monster in ipairs(monsterFolder:GetChildren()) do
-            if monster:IsA("Model") and monster:FindFirstChild("Humanoid") then
-                local distance = (humanoidRootPart.Position - monster.PrimaryPart.Position).magnitude
-                if distance <= attackRadius then
-                    monster.Humanoid.Health = 0
-                end
-            end
         end
     end
 end
